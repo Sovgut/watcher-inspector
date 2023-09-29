@@ -1,23 +1,23 @@
-import {QueueEntry, QueueState, Watcher} from "@sovgut/watcher";
+import {QueueEntry, SchedulerState, Watcher} from "@sovgut/watcher";
 import {useEffect, useState} from "react";
 
 import {usePing} from "../hooks/ping.js";
 
-export function Queue() {
+export function Scheduler() {
 	const [state, setState] = useState(Watcher.isEnabled());
 	const [total, setTotal] = useState<QueueEntry[]>([]);
-	const componentId = usePing("queue");
+	const componentId = usePing("scheduler");
 
 	useEffect(() => {
-		Watcher.on("queue", onChange);
+		Watcher.on("scheduler", onChange);
 
 		return function cleanup() {
-			Watcher.off("queue", onChange);
+			Watcher.off("scheduler", onChange);
 		};
 	}, []);
 
-	function onChange(state: QueueState, total: QueueEntry[]) {
-		setState(state === QueueState.Enabled);
+	function onChange(state: SchedulerState, total: QueueEntry[]) {
+		setState(state === SchedulerState.Enabled);
 		setTotal(total);
 	}
 
@@ -32,17 +32,17 @@ export function Queue() {
 	return (
 		<section id={componentId}>
 			<details>
-				<summary>Queue</summary>
+				<summary>Scheduler</summary>
 				<article>
 					<b>Event</b>
 					<ul className="row">
-						<pre className="event">queue</pre>
+						<pre className="event">scheduler</pre>
 						<button onClick={toggleState}>{state ? "Disable" : "Enable"}</button>
 					</ul>
 
 					<hr />
 					<b>Param 0</b>
-					<pre className="value">QueueState.{state ? "Enabled" : "Disabled"}</pre>
+					<pre className="value">SchedulerState.{state ? "Enabled" : "Disabled"}</pre>
 
 					<hr />
 					<b>Param 1</b>

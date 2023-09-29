@@ -3,6 +3,11 @@
 	font-family: monospace;
 }
 
+body,
+body * {
+	box-sizing: border-box;
+}
+
 body {
 	background-color: #030e19;
 }
@@ -60,7 +65,7 @@ section {
 	background-color: rgba(41, 98, 135, 0.25);
 	border: 1px solid rgba(41, 98, 135, 0.5);
 	padding: 4px;
-	width: max-content;
+	width: 100%;
 	height: max-content;
 	min-width: 200px;
 }

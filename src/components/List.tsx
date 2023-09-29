@@ -30,6 +30,14 @@ export function List() {
 		return <pre className="value">{JSON.stringify(entry, null, 4).replace('"platform": 0', '"platform": 0 (enum Platform.Olx)')}</pre>;
 	}
 
+	function onClearClick() {
+		if (entry?.url) {
+			Watcher.clear(entry.url).then(() => {
+				Watcher.getItems<EntityOffer[]>(entry.url).then((list) => setList(list));
+			});
+		}
+	}
+
 	function renderItem(item: EntityOffer) {
 		const className = clsx({
 			["list"]: true,
@@ -60,7 +68,10 @@ export function List() {
 				<summary>List</summary>
 				<article>
 					<b>Event</b>
-					<pre className="event">list</pre>
+					<ul className="row">
+						<pre className="event">list</pre>
+						<button onClick={onClearClick}>Clear</button>
+					</ul>
 
 					<hr />
 					<b>Param 0</b>

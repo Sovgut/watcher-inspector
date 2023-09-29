@@ -8,21 +8,13 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@sovgut/watcher": "^1.0.3",
-		"axios": "^1.5.0",
-		"cheerio": "^1.0.0-rc.12",
+		"@sovgut/watcher": "^1.0.7",
 		"clsx": "^2.0.0",
-		"comlink": "^4.4.1",
-		"events": "^3.3.0",
-		"localforage": "^1.10.0",
-		"luxon": "^3.4.3",
 		"nanoid": "^5.0.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
-		"@types/events": "^3.0.0",
-		"@types/luxon": "^3.3.2",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",

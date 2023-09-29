@@ -1,10 +1,10 @@
-import {QueueEntry, Status as WatchStatus, Watcher} from "@sovgut/watcher";
+import {QueueEntry, Watcher, WatcherStatus} from "@sovgut/watcher";
 import {useEffect, useState} from "react";
 
 import {usePing} from "../hooks/ping.js";
 
 export function Status() {
-	const [status, setStatus] = useState<WatchStatus>(WatchStatus.Idle);
+	const [status, setStatus] = useState<WatcherStatus>(WatcherStatus.Idle);
 	const [entry, setEntry] = useState<QueueEntry | undefined>();
 	const componentId = usePing("status");
 
@@ -16,7 +16,7 @@ export function Status() {
 		};
 	}, []);
 
-	function onChange(status: WatchStatus, entry: QueueEntry) {
+	function onChange(status: WatcherStatus, entry: QueueEntry) {
 		setStatus(status);
 		setEntry(entry);
 	}
@@ -30,11 +30,11 @@ export function Status() {
 	}
 
 	const STRINGIFY_STATUS = {
-		[WatchStatus.Idle]: "Idle",
-		[WatchStatus.Fetching]: "Fetching",
-		[WatchStatus.Processing]: "Processing",
-		[WatchStatus.Saving]: "Saving",
-		[WatchStatus.Error]: "Error",
+		[WatcherStatus.Idle]: "Idle",
+		[WatcherStatus.Fetching]: "Fetching",
+		[WatcherStatus.Processing]: "Processing",
+		[WatcherStatus.Saving]: "Saving",
+		[WatcherStatus.Error]: "Error",
 	};
 
 	return (
@@ -47,7 +47,7 @@ export function Status() {
 
 					<hr />
 					<b>Param 0</b>
-					<pre className="value">Status.{STRINGIFY_STATUS[status]}</pre>
+					<pre className="value">WatcherStatus.{STRINGIFY_STATUS[status]}</pre>
 
 					<hr />
 					<b>Param 1</b>

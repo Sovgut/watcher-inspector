@@ -5,7 +5,7 @@ import {Count} from "./components/Count.js";
 import {List} from "./components/List.js";
 import {New} from "./components/New.js";
 import {Next} from "./components/Next.js";
-import {Queue} from "./components/Queue.js";
+import {Scheduler} from "./components/Scheduler.js";
 import {Status} from "./components/Status.js";
 import {Tick} from "./components/Tick.js";
 
@@ -24,7 +24,7 @@ export function AppPage() {
 
 	return (
 		<ul>
-			<Queue />
+			<Scheduler />
 			<Tick />
 			<Status />
 			<Next />
