@@ -1,0 +1,111 @@
+:root {
+	color-scheme: dark;
+	font-family: monospace;
+}
+
+body {
+	background-color: #030e19;
+}
+
+button {
+	background-color: #296287;
+	border: none;
+	padding: 4px 24px;
+	cursor: pointer;
+}
+
+details > summary {
+	list-style: none;
+	cursor: pointer;
+}
+
+details > summary::before {
+	content: "+";
+	margin-right: 4px;
+	color: #c094d9;
+}
+
+details[open] > summary::before {
+	content: "-";
+	margin-right: 4px;
+	color: #c094d9;
+}
+
+hr {
+	background-color: #162b43;
+	height: 1px;
+	border: none;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+ul.row {
+	flex-direction: row;
+	flex-flow: wrap;
+}
+
+b {
+	color: #53bcf5;
+}
+
+section {
+	background-color: rgba(41, 98, 135, 0.25);
+	border: 1px solid rgba(41, 98, 135, 0.5);
+	padding: 4px;
+	width: max-content;
+	height: max-content;
+	min-width: 200px;
+}
+
+pre {
+	background-color: rgba(41, 98, 135, 0.25);
+	border: 1px solid rgba(41, 98, 135, 0.5);
+	padding: 4px;
+	width: max-content;
+	height: max-content;
+	margin: 0;
+	color: #f5ecba;
+}
+
+pre.unknown {
+	color: #8faad6;
+}
+
+pre.event {
+	color: #c094d9;
+}
+
+pre.list {
+	color: #93d8cb;
+}
+
+pre.list ul {
+	max-height: 500px;
+	overflow-y: auto;
+}
+
+pre.value {
+	color: #f5ecba;
+}
+
+pre.hint {
+	color: #c094d9;
+}
+
+pre.corrupted {
+	color: red;
+}
+
+article {
+	background-color: #051526;
+	border: 1px solid rgba(41, 98, 135, 0.5);
+	padding: 4px;
+}
