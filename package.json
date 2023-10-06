@@ -8,7 +8,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@sovgut/watcher": "^1.0.7",
+		"@sovgut/watcher": "^1.1.0",
 		"clsx": "^2.0.0",
 		"nanoid": "^5.0.1",
 		"react": "^18.2.0",

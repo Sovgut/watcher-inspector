@@ -1,90 +1,67 @@
-import {EntityOffer, QueueEntry, Watcher} from "@sovgut/watcher";
-import clsx from "clsx";
-import {useEffect, useState} from "react";
+import {Offer, Resource, Watcher, useNewEvent} from "@sovgut/watcher";
 
+import {useEffect, useState} from "react";
 import {usePing} from "../hooks/ping.js";
+import {OfferArray} from "./values/OfferArray.js";
+import {Primitive} from "./values/Primitive.js";
+import {ResourceArray} from "./values/ResourceArray.js";
+import {ResourceObject} from "./values/ResourceObject.js";
 
 export function List() {
-	const [list, setList] = useState<EntityOffer[]>([]);
-	const [entry, setEntry] = useState<QueueEntry | undefined>();
-	const componentId = usePing("list");
+	const [offers, setOffers] = useState<Offer[]>();
+	const {resource, queue} = useNewEvent();
+	const componentId = usePing("new");
 
 	useEffect(() => {
-		Watcher.on("list", onChange);
+		console.log(resource);
 
-		return function cleanup() {
-			Watcher.off("list", onChange);
-		};
-	}, []);
+		if (resource) {
+			getOffers(resource);
+		}
+	}, [resource]);
 
-	function onChange(list: EntityOffer[], entry: QueueEntry) {
-		setList(list);
-		setEntry(entry);
-	}
-
-	function unknownValue() {
-		return <pre className="unknown">unknown</pre>;
-	}
-
-	function knownValue(entry: QueueEntry) {
-		return <pre className="value">{JSON.stringify(entry, null, 4).replace('"platform": 0', '"platform": 0 (enum Platform.Olx)')}</pre>;
+	function getOffers(resource: Resource) {
+		Watcher.database.getItems(resource.url).then((offers) => {
+			setOffers(offers);
+		});
 	}
 
 	function onClearClick() {
-		if (entry?.url) {
-			Watcher.clear(entry.url).then(() => {
-				Watcher.getItems<EntityOffer[]>(entry.url).then((list) => setList(list));
+		if (resource) {
+			Watcher.database.clear(resource.url).then(() => {
+				getOffers(resource);
 			});
 		}
-	}
-
-	function renderItem(item: EntityOffer) {
-		const className = clsx({
-			["list"]: true,
-			["corrupted"]: item.hasMissingInfo,
-		});
-
-		item.anchor = `https://www.olx.ua${item.anchor}`;
-
-		return (
-			<pre key={item.id} className={className}>
-				<details>
-					<summary>{item.title}</summary>
-					<pre>
-						{JSON.stringify(item, null, 4)
-							.replace('"type": 1,', '"type": 1, (enum Offer.Advert)')
-							.replace('"type": 0,', '"type": 0, (enum Offer.Job)')
-							.replace('"status": 0', '"status": 0 (enum EntityStatus.New)')
-							.replace('"status": 1', '"status": 1 (enum EntityStatus.Visited)')}
-					</pre>
-				</details>
-			</pre>
-		);
 	}
 
 	return (
 		<section id={componentId}>
 			<details>
-				<summary>List</summary>
+				<summary>Table content</summary>
 				<article>
-					<b>Event</b>
-					<ul className="row">
-						<pre className="event">list</pre>
-						<button onClick={onClearClick}>Clear</button>
-					</ul>
+					<fieldset>
+						<legend>table name</legend>
+						<ul className="row">
+							<Primitive value={resource?.url} />
+							<button onClick={onClearClick} disabled={!offers || offers.length === 0}>
+								Clear
+							</button>
+						</ul>
+					</fieldset>
 
-					<hr />
-					<b>Param 0</b>
-					<pre className="list">
-						<details>
-							<summary>EntityOffer[] &#x7b; ...{list.length} items &#x7d;</summary>
-							<ul>{list.map((item) => renderItem(item))}</ul>
-						</details>
-					</pre>
+					<fieldset>
+						<legend>value</legend>
+						<b>offers</b>
+						<OfferArray values={offers} />
 
-					<hr />
-					<b>Param 1</b>
-					{entry ? knownValue(entry) : unknownValue()}
+						<hr />
+						<b>resource</b>
+						<ResourceObject value={resource} />
+
+						<hr />
+						<b>queue</b>
+						<ResourceArray values={queue} />
+					</fieldset>
 				</article>
 			</details>
 		</section>

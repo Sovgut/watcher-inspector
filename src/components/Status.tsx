@@ -1,57 +1,37 @@
-import {QueueEntry, Watcher, WatcherStatus} from "@sovgut/watcher";
-import {useEffect, useState} from "react";
+import {useStatusEvent} from "@sovgut/watcher";
 
 import {usePing} from "../hooks/ping.js";
+import {ResourceArray} from "./values/ResourceArray.js";
+import {ResourceObject} from "./values/ResourceObject.js";
+import {WatcherStatusEnum} from "./values/WatcherStatusEnum.js";
 
 export function Status() {
-	const [status, setStatus] = useState<WatcherStatus>(WatcherStatus.Idle);
-	const [entry, setEntry] = useState<QueueEntry | undefined>();
+	const {status, resource, queue} = useStatusEvent();
 	const componentId = usePing("status");
-
-	useEffect(() => {
-		Watcher.on("status", onChange);
-
-		return function cleanup() {
-			Watcher.off("status", onChange);
-		};
-	}, []);
-
-	function onChange(status: WatcherStatus, entry: QueueEntry) {
-		setStatus(status);
-		setEntry(entry);
-	}
-
-	function unknownValue() {
-		return <pre className="unknown">unknown</pre>;
-	}
-
-	function knownValue(entry: QueueEntry) {
-		return <pre className="value">{JSON.stringify(entry, null, 4).replace('"platform": 0', '"platform": 0 (enum Platform.Olx)')}</pre>;
-	}
-
-	const STRINGIFY_STATUS = {
-		[WatcherStatus.Idle]: "Idle",
-		[WatcherStatus.Fetching]: "Fetching",
-		[WatcherStatus.Processing]: "Processing",
-		[WatcherStatus.Saving]: "Saving",
-		[WatcherStatus.Error]: "Error",
-	};
 
 	return (
 		<section id={componentId}>
 			<details>
 				<summary>Status</summary>
 				<article>
-					<b>Event</b>
-					<pre className="event">status</pre>
+					<fieldset>
+						<legend>name</legend>
+						<pre className="event">status</pre>
+					</fieldset>
 
-					<hr />
-					<b>Param 0</b>
-					<pre className="value">WatcherStatus.{STRINGIFY_STATUS[status]}</pre>
+					<fieldset>
+						<legend>value</legend>
+						<b>status</b>
+						<WatcherStatusEnum value={status} />
 
-					<hr />
-					<b>Param 1</b>
-					{entry ? knownValue(entry) : unknownValue()}
+						<hr />
+						<b>resource</b>
+						<ResourceObject value={resource} />
+
+						<hr />
+						<b>queue</b>
+						<ResourceArray values={queue} />
+					</fieldset>
 				</article>
 			</details>
 		</section>

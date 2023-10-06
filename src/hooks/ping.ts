@@ -6,10 +6,10 @@ export function usePing(event: keyof EventCallback) {
 	const id = useRef(nanoid());
 
 	useEffect(() => {
-		Watcher.on(event, onEvent);
+		Watcher.observer.on(event, onEvent);
 
 		return function cleanup() {
-			Watcher.off(event, onEvent);
+			Watcher.observer.off(event, onEvent);
 		};
 	}, [event]);
 

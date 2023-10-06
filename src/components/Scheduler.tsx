@@ -1,31 +1,27 @@
-import {QueueEntry, SchedulerState, Watcher} from "@sovgut/watcher";
-import {useEffect, useState} from "react";
+import {Platform, Resource, SchedulerState, useSchedulerCommands, useSchedulerEvent} from "@sovgut/watcher";
 
 import {usePing} from "../hooks/ping.js";
+import {ToggleResource} from "./controls/ToggleResource.js";
+import {ResourceArray} from "./values/ResourceArray.js";
+import {ResourceObject} from "./values/ResourceObject.js";
+import {SchedulerStateEnum} from "./values/SchedulerStateEnum.js";
+
+const RESOURCES: Resource[] = [
+	{url: "https://www.olx.ua/nedvizhimost/kvartiry/", platform: Platform.Olx, title: "Квартиры"},
+	{url: "https://www.olx.ua/uk/transport/avtobusy/?currency=UAH&search%5Bfilter_enum_car_state_type%5D%5B0%5D=with_mileage", platform: Platform.Olx, title: "Работа"},
+];
 
 export function Scheduler() {
-	const [state, setState] = useState(Watcher.isEnabled());
-	const [total, setTotal] = useState<QueueEntry[]>([]);
+	const {state, resource, queue} = useSchedulerEvent();
+	const {enable, disable} = useSchedulerCommands();
 	const componentId = usePing("scheduler");
 
-	useEffect(() => {
-		Watcher.on("scheduler", onChange);
-
-		return function cleanup() {
-			Watcher.off("scheduler", onChange);
-		};
-	}, []);
-
-	function onChange(state: SchedulerState, total: QueueEntry[]) {
-		setState(state === SchedulerState.Enabled);
-		setTotal(total);
-	}
-
-	function toggleState() {
-		if (Watcher.isEnabled()) {
-			Watcher.disable();
-		} else {
-			Watcher.enable();
+	function toggleSchedulerState() {
+		switch (state) {
+			case SchedulerState.Enabled:
+				return disable();
+			case SchedulerState.Disabled:
+				return enable();
 		}
 	}
 
@@ -34,33 +30,30 @@ export function Scheduler() {
 			<details>
 				<summary>Scheduler</summary>
 				<article>
-					<b>Event</b>
-					<ul className="row">
-						<pre className="event">scheduler</pre>
-						<button onClick={toggleState}>{state ? "Disable" : "Enable"}</button>
-					</ul>
+					<fieldset>
+						<legend>name</legend>
+						<ul className="row">
+							<pre className="event">scheduler</pre>
+							<button onClick={toggleSchedulerState}>{state === SchedulerState.Enabled ? "Disable" : "Enable"}</button>
+							{RESOURCES.map((resource) => (
+								<ToggleResource key={resource.url} resource={resource} />
+							))}
+						</ul>
+					</fieldset>
 
-					<hr />
-					<b>Param 0</b>
-					<pre className="value">SchedulerState.{state ? "Enabled" : "Disabled"}</pre>
+					<fieldset>
+						<legend>value</legend>
+						<b>state</b>
+						<SchedulerStateEnum value={state} />
 
-					<hr />
-					<b>Param 1</b>
-					<pre className="list">
-						<details>
-							<summary>QueueEntry[] &#x7b; ...{total.length} items &#x7d;</summary>
-							<ul>
-								{total.map((item) => (
-									<pre key={item.url} className="list">
-										<details>
-											<summary>{item.url}</summary>
-											<pre>{JSON.stringify(item, null, 4).replace('"platform": 0', '"platform": 0 (enum Platform.Olx)')}</pre>
-										</details>
-									</pre>
-								))}
-							</ul>
-						</details>
-					</pre>
+						<hr />
+						<b>resource</b>
+						<ResourceObject value={resource} />
+
+						<hr />
+						<b>queue</b>
+						<ResourceArray values={queue} />
+					</fieldset>
 				</article>
 			</details>
 		</section>

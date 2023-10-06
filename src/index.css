@@ -19,6 +19,14 @@ button {
 	cursor: pointer;
 }
 
+button:active {
+	background-color: #225475;
+}
+
+button:disabled {
+	cursor: not-allowed;
+}
+
 details > summary {
 	list-style: none;
 	cursor: pointer;
@@ -57,8 +65,13 @@ ul.row {
 	flex-flow: wrap;
 }
 
-b {
+legend {
 	color: #53bcf5;
+}
+
+fieldset {
+	border-color: rgba(41, 98, 135, 0.5);
+	border-width: 1px;
 }
 
 section {
